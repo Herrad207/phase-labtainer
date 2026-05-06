@@ -1,0 +1,49 @@
+#!/bin/bash
+HOME_DIR="/home/student"
+ANS_FILE="$HOME_DIR/results/answers.txt"
+
+# [ CW1 ] Noise Attack: Kiem tra file CSV co it nhat 1 True va 1 False
+if [ -f "$HOME_DIR/results/noise_attack.csv" ]; then
+    if grep -q "True" "$HOME_DIR/results/noise_attack.csv" && grep -q "False" "$HOME_DIR/results/noise_attack.csv"; then
+        echo "CW1_NOISE_OK"
+    fi
+fi
+
+# Kiem tra cac cau hoi trac nghiem trong answers.txt (CW2, CW3, CW4, CW6)
+if [ -f "$ANS_FILE" ]; then
+    # [ CW2 ] Threshold: Kiem tra sigma co nam trong khoang 60000 - 100000
+    sigma=$(grep "^CW2_SIGMA" "$ANS_FILE" | cut -d':' -f2 | tr -d ' ')
+    if [[ "$sigma" =~ ^[0-9]+$ ]] && [[ "$sigma" -ge 50000 && "$sigma" -le 100000 ]]; then
+        echo "CW2_THRESH_OK"
+    fi
+
+    # [ CW3 ] Resample: Kiem tra dap an la Yes
+    if grep -q "^CW3_RESAMPLE:yes" "$ANS_FILE"; then
+        echo "CW3_RESAMPLE_OK"
+    fi
+
+    # [ CW4 ] Volume: Kiem tra dap an la No (Khong bi pha huy)
+    if grep -q "^CW4_VOLUME:no" "$ANS_FILE"; then
+        echo "CW4_VOLUME_OK"
+    fi
+
+    # [ CW6 ] Invert Attack: Kiem tra dap an chon B (Lat bit)
+    if grep -q "^CW6_INVERT:B" "$ANS_FILE"; then
+        echo "CW6_INVERT_OK"
+    fi
+fi
+
+# [ CW5 ] Time Stretch: Kiem tra CSV tao thanh cong va co >= 2 dong du lieu
+if [ -f "$HOME_DIR/results/timestretch.csv" ]; then
+    count=$(tail -n +2 "$HOME_DIR/results/timestretch.csv" | grep -c "," 2>/dev/null || echo 0)
+    if [ "$count" -ge 2 ]; then
+        echo "CW5_STRETCH_OK"
+    fi
+fi
+
+# [ CW7 ] Crop Attack: Kiem tra file CSV co it nhat 1 True va 1 False
+if [ -f "$HOME_DIR/results/crop_attack.csv" ]; then
+    if grep -q "True" "$HOME_DIR/results/crop_attack.csv" && grep -q "False" "$HOME_DIR/results/crop_attack.csv"; then
+        echo "CW7_CROP_OK"
+    fi
+fi
